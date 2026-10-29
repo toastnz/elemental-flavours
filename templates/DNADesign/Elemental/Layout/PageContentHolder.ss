@@ -3,4 +3,4 @@
      uses. Wrapping it in a block holder as well would nest the page content
      inside a block it is not part of, and give it a second helping of the
      block padding. So this holder is deliberately nothing at all. --%>
-$Element
+{$Element}

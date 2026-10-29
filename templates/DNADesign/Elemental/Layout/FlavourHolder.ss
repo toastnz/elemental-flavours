@@ -6,6 +6,8 @@
      Add classes and attributes through the updateHolderClasses and
      updateHolderAttributes hooks (Toast\Flavours\Extensions\ElementHolderExtension)
      rather than by overriding this template. --%>
-<elemental-flavour id="$Anchor" class="$HolderClasses"$HolderAttributes>
-    $Element
+<elemental-flavour id="{$Anchor}" class="{$HolderClasses}" {$HolderAttributes}>
+    <section>
+        {$Element}
+    </section>
 </elemental-flavour>
