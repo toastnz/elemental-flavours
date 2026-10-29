@@ -19,6 +19,7 @@ duplicating, history, reordering, search indexing, reports — is left alone.
 | **Page content block** | Positions a page's own content among its blocks, so the page template is one block in the run rather than a fixed slot around them. |
 | **Element items** | A base class for the repeated rows inside a block — accordion panels, gallery images, logos — with sorting, permissions and versioning already right. |
 | **Type labels** | Each row in the block list says what kind of block it is, so an author doesn't have to read the icon. |
+| **`<elemental-flavour>`** | Every block renders in a custom element that halves the spacing between neighbouring blocks of the same colour. |
 | **Block navigation** | Previous, next and a jump menu on a block's own edit screen. |
 | **Migration** | A task that moves `toastnz/blocks-layouts` content onto elemental blocks. |
 
@@ -352,6 +353,77 @@ routes them the same way, unsaved-changes prompt included.
 It only appears on a block. A row inside one has the arrows and no menu - the
 extension is applied to every detail form in the CMS and checks what it is
 looking at.
+
+## `<elemental-flavour>`
+
+Every block is rendered inside an `<elemental-flavour>` element
+(`templates/DNADesign/Elemental/Layout/FlavourHolder.ss`, set as elemental's
+`controller_template`). It is the block's root: it carries the anchor as its
+`id`, and the block's classes and attributes.
+
+It is also a custom element. Its script compares each one's computed background
+with its neighbours and adds:
+
+- `collapsed-top` / `collapsed-bottom` when the block above / below has the same
+  background
+- `transparent` when it has no background of its own (it counts as the page's)
+
+so a theme can halve the padding between two blocks that would otherwise read
+as one band with a gap in it. Style the element in the theme - it is a custom
+element, so it is `display: inline` until told otherwise:
+
+```scss
+elemental-flavour {
+  display: block;
+  padding-block: var(--block-padding);
+
+  &.collapsed-top { padding-top: calc(var(--block-padding) / 2); }
+  &.collapsed-bottom { padding-bottom: calc(var(--block-padding) / 2); }
+}
+```
+
+The script is added to every front-end page, deferred. It re-checks when blocks
+are added or restyled, stylesheets load, or the viewport or colour scheme
+changes; `customElements.get('elemental-flavour').refreshAll()` forces it. The
+element can be used by hand for any band of a page that should collapse against
+the blocks beside it. Ported from `toastnz/blocks-layouts`' `<colour-block>`,
+which worked the same way.
+
+To load the script yourself instead:
+
+```yml
+Toast\Flavours\Extensions\ElementalFlavourScriptExtension:
+  require_script: false
+```
+
+### Classes and attributes on the holder
+
+The holder gets elemental's own classes (`element`, the class name, the layout
+and `ExtraClass`). Add to them from an extension rather than overriding the
+template:
+
+```php
+protected function updateHolderClasses(array &$classes): void
+{
+    $classes[] = 'my-block';
+}
+```
+
+and attributes from the element itself, or from an extension:
+
+```php
+public function provideHolderAttributes(): array
+{
+    return ['data-scroll-progress' => true, 'style' => '--min-height: 50vh'];
+}
+
+protected function updateHolderAttributes(array &$attributes): void
+{
+    $attributes['data-block-type'] = $this->owner->getType();
+}
+```
+
+`true` writes a bare attribute; `null`, `false` and `''` write nothing.
 
 ## Blocks on their own tab
 

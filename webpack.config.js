@@ -49,6 +49,9 @@ module.exports = (env, argv) => {
             // _config/flavours.yml requires client/dist/js/bundle.js and
             // client/dist/styles/bundle.css by path.
             bundle: [`${SRC}/js/bundle.js`, `${SRC}/styles/bundle.scss`],
+            // The front-end half: the <elemental-flavour> custom element. It
+            // imports nothing, so none of the CMS externals above reach it.
+            'elemental-flavour': `${SRC}/js/elemental-flavour.js`,
         },
         output: {
             path: DIST,

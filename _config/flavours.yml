@@ -10,11 +10,22 @@ DNADesign\Elemental\Models\BaseElement:
     # Puts the block's type beside its title in the CMS list. Remove this line
     # to go back to the icon being the only thing that says what a block is.
     - Toast\Flavours\Extensions\ElementTypeFlagExtension
+    # $HolderClasses and $HolderAttributes for the <elemental-flavour> holder
+    - Toast\Flavours\Extensions\ElementHolderExtension
   # Title identifies the block in the CMS list; Heading is the one that shows on
   # the page. Leaving elemental's "Displayed" checkbox on screen next to a
   # separate Heading field asks an author to work out which of two headings
   # they are editing.
   displays_title_in_template: false
+  # Every block renders in <elemental-flavour> (templates/DNADesign/Elemental/Layout/FlavourHolder.ss).
+  # A name of its own rather than an override of elemental's ElementHolder.ss,
+  # which would depend on module order to win.
+  controller_template: 'FlavourHolder'
+
+# The <elemental-flavour> custom element, on every front-end page.
+SilverStripe\CMS\Controllers\ContentController:
+  extensions:
+    - Toast\Flavours\Extensions\ElementalFlavourScriptExtension
 
 # Optional: does nothing unless toastnz/colourpalettes is installed. Applied to
 # the form factory rather than to the element, so it runs after every extension

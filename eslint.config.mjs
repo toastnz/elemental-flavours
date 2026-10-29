@@ -29,6 +29,13 @@ export default [
             globals: {
                 document: 'readonly',
                 window: 'readonly',
+                // For the <elemental-flavour> custom element, which talks to the DOM directly
+                HTMLElement: 'readonly',
+                HTMLLinkElement: 'readonly',
+                MutationObserver: 'readonly',
+                getComputedStyle: 'readonly',
+                setTimeout: 'readonly',
+                clearTimeout: 'readonly',
             },
         },
         rules: {
