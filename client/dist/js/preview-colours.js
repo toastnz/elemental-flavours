@@ -1,0 +1,1 @@
+window.self!==window.top&&window.addEventListener("message",({source:e,data:t})=>{if(e!==window.parent||!t||"elemental-flavours"!==t.source)return;const r=document.getElementById(t.anchor);r&&Object.entries(t.properties||{}).forEach(([e,t])=>{e.startsWith("--")&&(null===t?r.style.removeProperty(e):r.style.setProperty(e,t))})});

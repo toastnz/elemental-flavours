@@ -52,6 +52,12 @@ module.exports = (env, argv) => {
             // The front-end half: the <elemental-flavour> custom element. It
             // imports nothing, so none of the CMS externals above reach it.
             'elemental-flavour': `${SRC}/js/elemental-flavour.js`,
+            // The live colour preview, a half in the CMS and a half in the
+            // preview frame. Their own bundles because they are only loaded
+            // when toastnz/colourpalettes is installed, and neither imports
+            // anything.
+            'cms-colours': `${SRC}/js/cmsColours.js`,
+            'preview-colours': `${SRC}/js/previewColours.js`,
         },
         output: {
             path: DIST,

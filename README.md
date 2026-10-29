@@ -299,6 +299,37 @@ inherits and an author is asked to choose between radio buttons labelled
 through `EditFormFactory` — after every extension has finished adding fields,
 and only on the form where the problem exists.
 
+### Live colour preview
+
+With `toastnz/colourpalettes` installed, choosing a colour for a block shows in
+the preview panel as the swatch is picked, before anything is saved. Nothing to
+configure, and the module does not require colourpalettes: everything for it is
+in `_config/colourpalettes.yml`, behind `Only: classexists`, so without it none
+of it is registered or loaded.
+
+It works on the block's holder, which carries the block's colours as custom
+properties in its own `style` - `--_primary-colour` and its contrast pair for a
+`PrimaryColour`, for any `has_one` to a `Colour`. The server decides what each
+swatch means: every colour field carries, per swatch, the properties to put on
+the block, so the two halves of the script know nothing about how colours are
+named or how their contrast is worked out.
+
+- `cms-colours.js`, in the CMS, passes the swatch's properties to the preview
+  frame. It finds the block from the hidden `StageLink` field elemental puts in
+  every block form, whose address ends in the block's anchor.
+- `preview-colours.js`, in the frame, sets them on the block. It is only
+  requested on a `?CMSPreview=1` page, so a visitor never downloads it, and it
+  only accepts messages from the window that framed the page.
+
+Choosing "None" clears the properties, so the block falls back to the theme's
+default for it - which is why they are written to the holder's `style` and not
+to a stylesheet keyed on its anchor, which could be overridden but not taken
+away. `<elemental-flavour>` watches its own `style`, so its spacing classes
+update live too.
+
+An unsaved colour stays on the block in the preview until the page reloads,
+including if the author moves on to another block without saving.
+
 ## Previewing
 
 An element implements `CMSPreviewable`, and Silverstripe's own preview panel

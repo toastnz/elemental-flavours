@@ -29,6 +29,7 @@ export default [
             globals: {
                 document: 'readonly',
                 window: 'readonly',
+                URL: 'readonly',
                 // For the <elemental-flavour> custom element, which talks to the DOM directly
                 HTMLElement: 'readonly',
                 HTMLLinkElement: 'readonly',

@@ -76,6 +76,13 @@ class ColourPaletteFieldExtension extends Extension
             // defines, which is why replacing it here survives - anything not
             // already in the defaults would be dropped.
             $field->setSchemaState(['source' => $this->describeColours($field)]);
+
+            // What each swatch does to a block, for the live preview. Set on
+            // the field by ColourPaletteFieldPropertiesExtension, which is
+            // only there when the preview is - hence the check.
+            if ($colours = $field->getAttribute('data-css-colours')) {
+                $field->setSchemaData(['data' => ['colours' => json_decode($colours, true)]]);
+            }
         }
     }
 

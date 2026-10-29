@@ -1,0 +1,32 @@
+---
+Name: elemental-flavours-colourpalettes
+After:
+  - '#elemental-flavours'
+Only:
+  classexists: 'Toast\ColourPalettes\Fields\ColourPaletteField'
+---
+# Live colour preview: choosing a colour for a block in the CMS shows it in the
+# preview panel as the swatch is picked. Everything for it is here, so without
+# toastnz/colourpalettes none of it is registered or loaded - and this module
+# does not require it.
+
+# What each swatch does to a block, for the CMS script
+Toast\ColourPalettes\Fields\ColourPaletteField:
+  extensions:
+    - Toast\Flavours\Extensions\ColourPaletteFieldPropertiesExtension
+
+# A block's colours as custom properties on its holder, which is what the
+# preview changes
+DNADesign\Elemental\Models\BaseElement:
+  extensions:
+    - Toast\Flavours\Extensions\ElementColourExtension
+
+# The receiver inside the preview frame
+SilverStripe\CMS\Controllers\ContentController:
+  extensions:
+    - Toast\Flavours\Extensions\PreviewColoursExtension
+
+# The sender in the CMS
+SilverStripe\Admin\LeftAndMain:
+  extra_requirements_javascript:
+    - 'toastnz/elemental-flavours:client/dist/js/cms-colours.js'

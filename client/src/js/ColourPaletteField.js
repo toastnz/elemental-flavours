@@ -21,6 +21,7 @@ const ColourPaletteField = ({
   name,
   value,
   source,
+  data,
   readOnly,
   disabled,
   onChange,
@@ -39,6 +40,9 @@ const ColourPaletteField = ({
     <ul
       className={classnames('optionset', 'colourpalette', extraClass, { readonly: isDisabled })}
       role="listbox"
+      // What each swatch does to a block, for the live preview (cmsColours.js).
+      // Left off when the preview isn't there to read it.
+      data-css-colours={data && data.colours ? JSON.stringify(data.colours) : undefined}
     >
       {options.map((option, index) => {
         const optionId = `${id}-${option.value}`;
@@ -102,6 +106,9 @@ ColourPaletteField.propTypes = {
     brightness: PropTypes.string,
     isThemeColour: PropTypes.bool,
   })),
+  data: PropTypes.shape({
+    colours: PropTypes.object,
+  }),
   onChange: PropTypes.func,
   readOnly: PropTypes.bool,
   disabled: PropTypes.bool,
