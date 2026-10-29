@@ -1,0 +1,56 @@
+---
+Name: elemental-flavours
+After:
+  - '#elemental'
+---
+DNADesign\Elemental\Models\BaseElement:
+  extensions:
+    - Toast\Flavours\Extensions\LayoutElementExtension
+    - Toast\Flavours\Extensions\ElementContentExtension
+    # Puts the block's type beside its title in the CMS list. Remove this line
+    # to go back to the icon being the only thing that says what a block is.
+    - Toast\Flavours\Extensions\ElementTypeFlagExtension
+  # Title identifies the block in the CMS list; Heading is the one that shows on
+  # the page. Leaving elemental's "Displayed" checkbox on screen next to a
+  # separate Heading field asks an author to work out which of two headings
+  # they are editing.
+  displays_title_in_template: false
+
+# Optional: does nothing unless toastnz/colourpalettes is installed. Applied to
+# the form factory rather than to the element, so it runs after every extension
+# has finished adding fields.
+DNADesign\Elemental\Forms\EditFormFactory:
+  extensions:
+    - Toast\Flavours\Extensions\ColourPaletteFieldExtension
+
+SilverStripe\Admin\LeftAndMain:
+  extensions:
+    # For the one hook that runs early enough to put the colour palette's own
+    # stylesheet on the CMS page. Does nothing without that module installed.
+    - Toast\Flavours\Extensions\ColourPaletteFieldExtension
+  extra_requirements_javascript:
+    - 'toastnz/elemental-flavours:client/dist/js/bundle.js'
+  extra_requirements_css:
+    - 'toastnz/elemental-flavours:client/dist/styles/bundle.css'
+
+# A menu of the page's blocks beside those arrows, for jumping rather than
+# stepping. Guarded on the record being a block, so rows inside one are
+# unaffected.
+SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
+  extensions:
+    - Toast\Flavours\Extensions\ElementJumpMenuExtension
+
+# Previous and next arrows on a block's edit form. Silverstripe builds them for
+# any grid that asks; elemental's block area is the one that doesn't.
+DNADesign\Elemental\Forms\ElementalAreaConfig:
+  extensions:
+    - Toast\Flavours\Extensions\ElementalAreaNavigationExtension
+
+SilverStripe\Core\Injector\Injector:
+  Psr\SimpleCache\CacheInterface.FlavoursLayouts:
+    factory: SilverStripe\Core\Cache\CacheFactory
+    constructor:
+      namespace: 'FlavoursLayouts'
+  Toast\Flavours\Layouts\LayoutRegistry:
+    properties:
+      cache: '%$Psr\SimpleCache\CacheInterface.FlavoursLayouts'

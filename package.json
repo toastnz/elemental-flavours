@@ -1,0 +1,48 @@
+{
+  "name": "elemental-flavours",
+  "description": "CMS behaviour for the elemental-flavours module",
+  "private": true,
+  "engines": {
+    "node": ">=26"
+  },
+  "scripts": {
+    "build": "npm run lint && NODE_ENV=production webpack --mode production --bail --progress",
+    "dev": "NODE_ENV=development webpack --mode development --progress",
+    "watch": "NODE_ENV=development webpack --mode development --watch --progress",
+    "lint": "eslint client/src/js"
+  },
+  "license": "BSD-3-Clause",
+  "dependencies": {
+    "classnames": "^2.3.2",
+    "prop-types": "^15.8.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "reactstrap": "^9.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^8.0.1",
+    "@babel/preset-env": "^8.0.2",
+    "@babel/preset-react": "^8.0.1",
+    "autoprefixer": "^10.5.5",
+    "babel-loader": "^10.1.1",
+    "css-loader": "^7.1.5",
+    "css-minimizer-webpack-plugin": "^8.0.0",
+    "eslint": "^9.39.0",
+    "eslint-plugin-react": "^7.37.5",
+    "mini-css-extract-plugin": "^2.10.2",
+    "postcss": "^8.5.28",
+    "postcss-loader": "^8.2.1",
+    "resolve-url-loader": "^5.0.0",
+    "sass": "^1.104.0",
+    "sass-loader": "^17.0.1",
+    "terser-webpack-plugin": "^5.6.1",
+    "webpack": "^5.110.3",
+    "webpack-cli": "^7.2.3"
+  },
+  "browserslist": [
+    "defaults"
+  ],
+  "allowScripts": {
+    "@parcel/watcher@2.6.0": true
+  }
+}

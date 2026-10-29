@@ -1,0 +1,366 @@
+@use 'layout-icons';
+
+// No colours of our own.
+//
+// The picker has to sit inside whichever CMS theme a project is running, in
+// light mode and dark, so it borrows rather than paints: the toggle carries
+// Bootstrap's .form-control and the popover carries admin's
+// .popover-option-set, and both are then coloured by the same rules as every
+// other field on the form. Only the few things a theme has no opinion about -
+// the thumbnail sizes, the grid - are set here, and those use Bootstrap's own
+// custom properties where they need a colour at all.
+$flavours-thumbnail-height: 40px;
+
+.flavours-layout-picker {
+    &__toggle {
+        align-items: center;
+        display: flex;
+        gap: 8px;
+        height: auto;
+        min-height: 38px;
+        text-align: left;
+
+        &:disabled {
+            opacity: .6;
+        }
+    }
+
+    // Boxed the same way as the options in the popover, so the layout showing
+    // in the closed picker reads as the same kind of thing as the one an
+    // author picked it from.
+    &__thumbnail {
+        align-items: center;
+        border: 1px solid currentColor;
+        border-radius: var(--bs-border-radius, 3px);
+        display: flex;
+        flex: 0 0 auto;
+        height: 22px;
+        justify-content: center;
+        width: $flavours-thumbnail-height;
+
+        svg {
+            height: 15px;
+            width: auto;
+        }
+
+        .layout-icons {
+            font-size: 15px;
+            line-height: 1;
+        }
+    }
+
+    &__title {
+        flex: 1 1 auto;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &__caret {
+        flex: 0 0 auto;
+        font-size: 10px;
+        opacity: .6;
+    }
+
+}
+
+// One layout in the picker popover. Everything about its size, padding and
+// two-column placement comes from admin's .popover-option-set__button, the same
+// as the add-block popover; only the things that popover has no opinion about
+// are set here.
+.flavours-layout-option {
+    // Admin lays this button out as a line of text, which leaves a boxed icon
+    // sitting on the label's baseline rather than level with it. One flex row
+    // puts the two on a shared centre line instead.
+    align-items: center;
+    display: flex;
+
+    // Admin zeroes the margin on .btn__icon and puts the gap on its ::before
+    // instead, which is inside the box now. A flex gap sits outside it and
+    // doesn't have to out-specify anything to do it.
+    gap: .76925rem;
+
+    // The glyph gets a frame of its own. Bare, it reads as another piece of the
+    // label; framed, it reads as a small picture of the layout. currentColor so
+    // it takes the CMS text colour in either theme rather than naming white.
+    //
+    // 22px tall is what fits: admin caps this button at 40px and hides the
+    // overflow, and 10px of padding above and below leaves 20px of room, so a
+    // taller box would have its border cropped.
+    .btn__icon {
+        align-items: center;
+        border: 1px solid currentColor;
+        border-radius: var(--bs-border-radius, 3px);
+        display: inline-flex;
+        flex: 0 0 auto;
+        height: 40px;
+        justify-content: center;
+        width: 40px;
+
+        // The row owns the gap now, and the glyph has to come down to a size
+        // that sits inside its frame.
+        &::before {
+            font-size: 15px;
+            line-height: 1;
+            margin: 0!important;
+        }
+    }
+
+    // An inline SVG has to be talked down to the same size as a glyph.
+    &__svg svg {
+        height: 15px;
+        width: auto;
+    }
+
+    // Flex items don't shrink below their content, so a long layout name would
+    // push the button wider than its half-row instead of trailing off.
+    .btn__title {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    // The add-block popover has no notion of a current choice; a layout picker
+    // does. Marked with weight and a tint rather than a border, because these
+    // buttons are drawn with `border: 0` and adding one would resize the box.
+    &--active {
+        font-weight: 700;
+    }
+}
+
+// A content editor fills the element form.
+//
+// silverstripe/admin sizes an html editor at 58% of the form on a wide screen,
+// which is the right shape for a page form, where the label sits in a column
+// beside the field and the rest of the row is the label's. Elemental's inline
+// form puts labels above their fields and asks for the full width back, but
+// admin's rule carries !important and elemental's doesn't, so the editor is
+// left about two thirds of the way across with dead space beside it - and it is
+// the one field in the form that has real use for the room.
+//
+// Same weight back, and no wider a reach than the element form: a page's own
+// content field still sizes the way admin intends.
+//
+// This module puts a Content field on every element, so the narrow editor would
+// otherwise turn up on every block in the site.
+.element-editor-editform__form .form-group.htmleditor .form__field-holder {
+    flex: 1 0 100% !important;
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+// The block's type, beside its title in the block list.
+//
+// Quieter than the versioning flags it sits alongside, and deliberately so: a
+// draft or modified flag says something an author may need to act on, and this
+// one only says what the block is and will say the same thing for ever. Given
+// the same weight they compete, and the one that matters loses.
+//
+// Colour is inherited rather than chosen so the label reads in a light CMS and
+// a dark one without naming either.
+.badge.status-element-type {
+    background-color: transparent;
+    border: 1px solid currentColor;
+    color: inherit;
+    font-weight: 400;
+    opacity: .55;
+}
+
+// The block menu in a form's action bar.
+//
+// Bootstrap's dropdown styles come from the CMS, so what is left is the shape
+// of a row - a number, a name, and what kind of block it is - and stopping a
+// long page's worth of blocks from running off the screen.
+.flavours-block-jump {
+    // It used to be drawn rather than borrowed: an outline in the text colour,
+    // for a CMS theme whose .btn-secondary had no background at all.
+    //
+    // Now it is the CMS's own secondary button, as the CMS styles module
+    // (ranfury/silverstripe-cms-styles) draws every other one (21 Oct 2026:
+    // the outline in the text colour read as a different kind of control
+    // beside the action bar's buttons).
+    .flavours-block-jump__toggle {
+        align-items: center;
+        display: inline-flex;
+        gap: .4rem;
+    }
+
+    // Wide enough for a block's name beside its type: at 18rem a "Working
+    // together" or a "Get in touch" was cut short
+    &__menu {
+        max-height: 60vh;
+        min-width: 20rem;
+        max-width: min(32rem, 90vw);
+        overflow-y: auto;
+
+        // The bar sits at the bottom of the window, so the menu opens upwards.
+        bottom: 100%;
+        top: auto;
+    }
+
+    &__item {
+        align-items: baseline;
+        display: flex;
+        gap: .5rem;
+    }
+
+    // Fixed width so the names line up in a column rather than stepping in and
+    // out as the numbers gain a digit.
+    &__number {
+        flex: 0 0 1.5rem;
+        opacity: .5;
+        text-align: right;
+    }
+
+    &__label {
+        flex: 1 1 auto;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &__type {
+        flex: 0 0 auto;
+        font-size: .85em;
+        opacity: .5;
+    }
+
+    &__item--current {
+        font-weight: 700;
+    }
+}
+
+// Server-rendered fallback: the same field without the CMS javascript, so an
+// author still gets radio buttons they can see and use.
+// The picker as a row of tiles.
+//
+// This is what an author actually sees. The React component above draws a
+// dropdown, but it only mounts inside elemental's inline form - a block opened
+// on its own screen is an ordinary Silverstripe form, and this is the markup it
+// renders. Tiles suit the field better anyway: every layout is on screen at
+// once and the choice is made by looking rather than by opening something.
+//
+// Colours come from the marmalade CMS variables where a project has them and
+// fall back to Bootstrap's, so the tiles follow the light and dark toggle
+// without a media query here.
+$flavours-tile-size: 80px;
+$flavours-tile-accent: var(--cms-accent-colour, var(--bs-primary, #005ae1));
+$flavours-tile-on-accent: var(--cms-accent-text-colour, var(--cms-background-colour--dark, var(--bs-body-bg, #fff)));
+$flavours-tile-border: var(--cms-border-colour, var(--bs-border-color, currentColor));
+$flavours-tile-gap-colour: var(--cms-background-colour, var(--bs-body-bg, transparent));
+
+.field.layoutpicker {
+    // A row that wraps. The list is an .optionset, which a CMS theme may set
+    // in a column (the CMS styles module does), so the direction is said too
+    ul {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 20px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
+
+    // Only as wide as the tile, so a long layout name wraps under it rather
+    // than pushing the tiles apart into an uneven row.
+    .flavours-layout-picker__option {
+        margin: 0;
+        text-align: center;
+        width: $flavours-tile-size;
+    }
+
+    // The radio is the thing being operated, so it stays in the page for the
+    // keyboard and for screen readers rather than being display:none - it is
+    // just moved out of sight behind its own tile.
+    .flavours-layout-picker__input {
+        height: 0;
+        margin: 0;
+        opacity: 0;
+        padding: 0;
+        position: absolute;
+        width: 0;
+
+        &:checked + .flavours-layout-picker__label {
+            .flavours-layout-picker__thumbnail {
+                background-color: $flavours-tile-accent;
+                border-color: $flavours-tile-accent;
+                color: $flavours-tile-on-accent;
+
+                // A ring with a gap: the gap is painted in the form's own
+                // background so the accent reads as a ring around the tile and
+                // not as a thicker border on it.
+                box-shadow:
+                    0 0 0 .2rem #{$flavours-tile-gap-colour},
+                    0 0 0 .4rem #{$flavours-tile-accent};
+            }
+
+            .flavours-layout-picker__title {
+                color: $flavours-tile-accent;
+            }
+        }
+
+        // The input has no box of its own to draw a focus ring on, so the tile
+        // wears it. Without this the field cannot be used from the keyboard
+        // with any idea of where you are.
+        &:focus-visible + .flavours-layout-picker__label .flavours-layout-picker__thumbnail {
+            outline: 2px solid $flavours-tile-accent;
+            outline-offset: .4rem;
+        }
+    }
+
+    .flavours-layout-picker__label {
+        cursor: pointer;
+        display: block;
+        margin: 0;
+        width: 100%;
+    }
+
+    .flavours-layout-picker__thumbnail {
+        align-items: center;
+        border: 1px solid #{$flavours-tile-border};
+        border-radius: .3rem;
+        display: flex;
+        height: $flavours-tile-size;
+        justify-content: center;
+        overflow: hidden;
+        transition:
+            background-color .2s ease,
+            border-color .2s ease,
+            box-shadow .2s ease,
+            color .2s ease;
+        width: $flavours-tile-size;
+
+        svg {
+            height: 100%;
+            width: 100%;
+        }
+
+        .layout-icons {
+            font-size: 44px;
+            line-height: 1;
+        }
+    }
+
+    // Held back until chosen, so the row reads as one selected layout and some
+    // alternatives rather than as five things competing.
+    .flavours-layout-picker__input:not(:checked) + .flavours-layout-picker__label {
+        .flavours-layout-picker__thumbnail {
+            opacity: .75;
+        }
+
+        &:hover .flavours-layout-picker__thumbnail {
+            opacity: 1;
+        }
+    }
+
+    .flavours-layout-picker__title {
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        margin-top: 4px;
+        text-transform: uppercase;
+        transition: color .2s ease;
+    }
+}

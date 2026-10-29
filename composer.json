@@ -1,0 +1,60 @@
+{
+    "name": "toastnz/elemental-flavours",
+    "description": "Layout variants for Silverstripe Elemental: template-discovered layouts, an icon picker in the CMS, page-content elements and sortable element items.",
+    "type": "silverstripe-vendormodule",
+    "keywords": [
+        "silverstripe",
+        "elemental",
+        "elements",
+        "layouts",
+        "content blocks"
+    ],
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Emmanuel Davies",
+            "homepage": "https://toast.co.nz/",
+            "role": "Developer"
+        },
+        {
+            "name": "Matthew",
+            "homepage": "https://exposur.co.nz/",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "silverstripe/framework": "^6.2",
+        "silverstripe/cms": "^6",
+        "silverstripe/admin": "^3.2",
+        "silverstripe/versioned": "^3",
+        "dnadesign/silverstripe-elemental": "^6.2",
+        "symbiote/silverstripe-gridfieldextensions": "^5"
+    },
+    "require-dev": {
+        "silverstripe/recipe-testing": "^4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Toast\\Flavours\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Toast\\Flavours\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "expose": [
+            "client/dist"
+        ]
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true,
+            "silverstripe/vendor-plugin": true
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
